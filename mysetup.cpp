@@ -29,7 +29,7 @@ void mySetup::init()
 
     qDebug() << "UI initual finished ...";
 
-    ui->serial_baud->setCurrentText("115200");
+    ui->serial_baud->setCurrentText("57600");
     ui->serial_databit->setCurrentText("8");
     ui->serial_stopbit->setCurrentText("1");
     ui->serial_parity->setCurrentText("None");

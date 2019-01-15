@@ -82,23 +82,64 @@ QSerialPort::FlowControl mySerialPort::getFlowControl(QString FlowControl)
     else return QSerialPort::UnknownFlowControl;
 }
 
+
+//串口接收到数据后组合成一帧，emit出去（帧内容是四元数）
 void mySerialPort::read_Data()
 {
     this->myReadBuf.append(this->m_SerialPort->readAll());
-    if(myReadBuf.length() < 192)
+
+    emit real_time_data(myReadBuf);
+//    QString string;
+//    qDebug() << "real time data = " + string.prepend(myReadBuf) + ' ' + QString::number( myReadBuf.length());//QByteArray-->QString.
+
+
+    if(myReadBuf.indexOf('*') != -1 && combination == false && myReadBuf.indexOf('#') == -1)  //检测到 * 号，且 字符串组合标志关闭
     {
-        this->m_SerialPort->clear();
-        return;
+        frame =  myReadBuf.mid(myReadBuf.indexOf('*')); //截取字符串
+        combination = true;
     }
-    else
+
+    if(myReadBuf.indexOf('*') == -1 && myReadBuf.indexOf('#') == -1 && combination == true)
     {
-        this->m_SerialPort->clear();
-        emit dataRev(myReadBuf);
+        frame += myReadBuf;
+    }
+
+    if(myReadBuf.indexOf('#') != -1 && combination == true )
+    {
+        frame += myReadBuf.mid(0,myReadBuf.indexOf('#') + 1);
+        combination = false;
+        emit dataRev(frame);
+        QString string;
+        qDebug() << "frame = " + string.prepend(frame) + ' ' + QString::number( frame.length());//QByteArray-->QString.
+        frame.clear();
+
+        if(myReadBuf.indexOf('*') != -1 && combination == false)
+        {
+            frame =  myReadBuf.mid(myReadBuf.indexOf('*')); //截取字符串
+            combination = true;
+        }
     }
 
 
-
-    QString string ;
-    qDebug() <<  string.prepend(myReadBuf) + QString::number( myReadBuf.length());//QByteArray-->QString.
     myReadBuf.clear();
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

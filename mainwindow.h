@@ -27,7 +27,7 @@ private slots:
     void on_pushButton_clicked();
     void showMessage(QByteArray);
     void Com_Message(QString);
-
+    void calculate();
     void on_checkBox_Hex_stateChanged(int arg1);
 
 private:
@@ -45,6 +45,41 @@ private:
     void mylog(const QString log);
     void statusBarInit();
     void Bufferdata(QByteArray bytes);
+
+    struct Quaternion //四元数
+    {
+        float w;
+        float x;
+        float y;
+        float z;
+    } quater;
+    struct Euler    //欧拉角
+    {
+        float a;
+        float b;
+        float c;
+    } euler;
+
+    struct YAWPITCHROLL
+    {
+        float yaw;
+        float pitch;
+        float roll;
+    } YPR;
+
+    struct REALACCEL //未补偿的加速度
+    {
+        float x;
+        float y;
+        float z;
+    } RACCEL;
+
+    struct WORLDACCEL //已补偿的加速度
+    {
+        float x;
+        float y;
+        float z;
+    } WACCEL;
 
 
 signals:

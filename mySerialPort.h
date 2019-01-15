@@ -6,7 +6,7 @@
 #include <QDebug>
 #include "g_config_file.h"
 
-#define READ_BUF_SIZE 1024*1024
+#define READ_BUF_SIZE 10
 
 class mySerialPort :public QObject
 {
@@ -23,7 +23,9 @@ public slots:
 
 private:
     QByteArray myReadBuf;
+    QByteArray frame;
     QSerialPort *m_SerialPort;
+    bool combination = false;
 
     qint32 getBaud(QString baud);
     QSerialPort::StopBits getstopbit(QString Stopbit);
@@ -33,7 +35,7 @@ private:
 
 signals:
     void dataRev(QByteArray);
-
+    void real_time_data(QByteArray);
 };
 
 #endif // mySerialPort_H
